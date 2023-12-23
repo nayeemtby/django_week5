@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    {% if messages %}
+    {% for m in messages %}
+    <div class="mt-2 alert {% if m.tags == 'error' %}alert-danger {% elif m.tags == 'success' %}alert-success {% endif %}" role="alert">
+        &#x2022; {{m}}
+      </div>
+    {% endfor %}
+    {% endif %}
+    <h1 class="my-3">Profile</h1>
+    <p>
+        Logged in as {{user.username}}
+    </p>
+
+    <a href="{% url 'cngpass' %}" class="btn btn-primary my-3">Change Password</a>
+    <a href="{% url 'resetPass' %}" class="btn btn-primary my-3">Reset Password</a>
+</div>
+
+{% endblock content %}
