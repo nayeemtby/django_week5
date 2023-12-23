@@ -15,10 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from album.views import addAlbum, editAlbum
+from album.views import AddAlbumView, EditAlbumView
+from django.contrib.auth.decorators import login_required
 
 
 urlpatterns = [
-    path('add', addAlbum,name='addAlbum'),
-    path('edit/<id>', editAlbum,name='editAlbum'),
+    # path('add', addAlbum,name='addAlbum'),
+    path('add', login_required(AddAlbumView.as_view()), name='addAlbum'),
+    # path('edit/<id>', editAlbum,name='editAlbum'),
+    path('edit/<id>', login_required(EditAlbumView.as_view()), name='editAlbum'),
 ]

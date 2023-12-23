@@ -1,10 +1,13 @@
 from django.http import HttpRequest, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 from uger.forms import RegistrationForm
 
@@ -68,6 +71,18 @@ def loginView(req):
         return badReq
 
     return render(req, 'form.html', ctx)
+
+
+class CLoginView(SuccessMessageMixin, LoginView):
+    template_name = 'form.html'
+    extra_context = {
+        'title': 'Login',
+        'btnTxt': 'login'
+    }
+
+    success_message = 'Logged in successfully'
+    def get_success_url(self) -> str:
+        return reverse_lazy('home')
 
 
 def logout(req: HttpRequest):

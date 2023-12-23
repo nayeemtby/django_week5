@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.urls import path
 
-from uger.views import loginView, logout, register
+from django.contrib.auth.decorators import login_required
+from uger.views import CLoginView,  logout, register
 
 urlpatterns = [
     path('register', register, name='register'),
-    path('login', loginView, name='login'),
+    path('login', CLoginView.as_view(), name='login'),
     path('logout', logout, name='logout'),
 ]

@@ -1,6 +1,7 @@
-from django.http import HttpRequest, HttpResponseNotAllowed
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.http import HttpResponseNotAllowed
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from album.forms import AlbumForm
 from album.models import Album
@@ -9,37 +10,27 @@ from album.models import Album
 
 notAllowed = HttpResponseNotAllowed(['GET', 'POST'])
 
-@login_required
-def addAlbum(req: HttpRequest):
-    ctx: dict[str, object] = {'btnTxt': 'Add Album',
-                              'title': 'Add Album'}
-    if req.method == 'GET':
-        ctx['form'] = AlbumForm()
-        return render(req, 'album_form.html', ctx)
-    elif req.method == 'POST':
-        form = AlbumForm(req.POST)
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect('home')
-        else:
-            ctx['form'] = form
-            return render(req, 'album_form.html', ctx)
-    return notAllowed
 
-@login_required
-def editAlbum(req, id):
-    ctx: dict[str, object] = {
-        'btnTxt': 'Update Album', 'title': 'Edit Album'}
-    if req.method == 'GET':
-        album = Album.objects.get(pk=id)
-        ctx['form'] = AlbumForm(instance=album)
-        return render(req, 'album_form.html', ctx)
-    elif req.method == 'POST':
-        form = AlbumForm(req.POST, instance=Album.objects.get(pk=id))
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect('home')
-        else:
-            ctx['form'] = form
-            return render(req, 'album_form.html', ctx)
-    return notAllowed
+class AddAlbumView(SuccessMessageMixin, CreateView):
+    model = Album
+    form_class = AlbumForm
+    template_name = 'album_form.html'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'btnTxt': 'Add',
+        'title': 'Add Album'
+    }
+    success_message = 'Album added'
+
+
+class EditAlbumView(SuccessMessageMixin, UpdateView):
+    model = Album
+    form_class = AlbumForm
+    template_name = 'album_form.html'
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'btnTxt': 'Update Album',
+        'title': 'Edit Album'
+    }
+    success_message = 'Album updated successfully'
