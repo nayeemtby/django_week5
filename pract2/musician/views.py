@@ -1,6 +1,9 @@
 from django.http import HttpRequest, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from musician.forms import MusicianForm
 from musician.models import Musician
@@ -27,6 +30,18 @@ def addMusician(req: HttpRequest):
             ctx['form'] = form
             return render(req, 'musician_form.html', ctx)
     return notAllowed
+
+
+class AddMusicianView(SuccessMessageMixin, CreateView):
+    model = Musician
+    form_class = MusicianForm
+    template_name = 'musician_form.html'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'btnTxt': 'Add Musician',
+        'title': 'Add Musician'
+    }
+    success_message = 'Musician added'
 
 
 @login_required
