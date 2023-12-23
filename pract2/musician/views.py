@@ -1,5 +1,6 @@
-from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
+from django.http import HttpRequest, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
 
 from musician.forms import MusicianForm
 from musician.models import Musician
@@ -9,6 +10,7 @@ from musician.models import Musician
 notAllowed = HttpResponseNotAllowed(['GET', 'POST'])
 
 
+@login_required
 def addMusician(req: HttpRequest):
     ctx: dict[str, object] = {'btnTxt': 'Add Musician',
                               'title': 'Add Musician'}
@@ -27,6 +29,7 @@ def addMusician(req: HttpRequest):
     return notAllowed
 
 
+@login_required
 def editMusician(req: HttpRequest, id):
     ctx: dict[str, object] = {
         'btnTxt': 'Update Musician', 'title': 'Edit Musician'}
@@ -45,6 +48,7 @@ def editMusician(req: HttpRequest, id):
     return notAllowed
 
 
+@login_required
 def deleteMusician(req, id):
     Musician.objects.get(pk=id).delete()
     return redirect('home')

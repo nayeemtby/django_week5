@@ -2,7 +2,14 @@
 
 {% block content %}
 <div class="container my-5">
-<table class="table table-striped">
+    {% if messages %}
+    {% for m in messages %}
+    <div class="mt-2 alert {% if m.tags == 'error' %}alert-danger {% elif m.tags == 'success' %}alert-success {% endif %}" role="alert">
+        &#x2022; {{m}}
+      </div>
+    {% endfor %}
+    {% endif %}
+<table class="table table-striped my-4">
     <thead>
         <tr>
             <th scope="col">ID</th>
@@ -12,7 +19,9 @@
             <th scope="col">Instrument Type</th>
             <th scope="col">Album Name</th>
             <th scope="col">Release Date</th>
+            {% if user.is_authenticated %}
             <th scope="col">Actions</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -21,15 +30,20 @@
         <tr>
             <th scope="row">{{album.id}}</th>
             <td>
+                {% if user.is_authenticated %}
                 <a href="{% url "editMusician" album.musician.id %}" class="link">
-                {{album.musician.firstName}}&nbsp;{{album.musician.lastName}}
+                    {{album.musician.firstName}}&nbsp;{{album.musician.lastName}}
                 </a>
+                {% else %}
+                {{album.musician.firstName}}&nbsp;{{album.musician.lastName}}
+                {% endif %}
             </td>
             <td>{{album.musician.email}}</td>
             <td>{{album.rating}}</td>
             <td>{{album.musician.instrument}}</td>
             <td>{{album.name}}</td>
             <td>{{album.released}}</td>
+            {% if user.is_authenticated %}
             <td>
                 <a href="{% url "editAlbum" album.id %}">
                     <button class="btn btn-warning">Edit</button>
@@ -38,6 +52,7 @@
                     <button class="btn btn-danger">Delete</button>
                 </a>
             </td>
+            {% endif %}
 
         </tr>
         {% endfor %}

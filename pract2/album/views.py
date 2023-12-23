@@ -1,4 +1,5 @@
 from django.http import HttpRequest, HttpResponseNotAllowed
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from album.forms import AlbumForm
@@ -8,6 +9,7 @@ from album.models import Album
 
 notAllowed = HttpResponseNotAllowed(['GET', 'POST'])
 
+@login_required
 def addAlbum(req: HttpRequest):
     ctx: dict[str, object] = {'btnTxt': 'Add Album',
                               'title': 'Add Album'}
@@ -24,7 +26,7 @@ def addAlbum(req: HttpRequest):
             return render(req, 'album_form.html', ctx)
     return notAllowed
 
-
+@login_required
 def editAlbum(req, id):
     ctx: dict[str, object] = {
         'btnTxt': 'Update Album', 'title': 'Edit Album'}
