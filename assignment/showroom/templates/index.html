@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    {% if messages %}
+    {% for m in messages %}
+    <div class="mt-2 alert {% if m.tags == 'error' %}alert-danger {% elif m.tags == 'success' %}alert-success {% endif %}" role="alert">
+        &#x2022; {{m}}
+      </div>
+    {% endfor %}
+    {% endif %}
+    <h1> Home </h1>
+</div>
+{% endblock content %}
