@@ -17,12 +17,13 @@ Including another URLconf
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 
-from musician.views import AddMusicianView, addMusician, deleteMusician, editMusician
+from musician.views import AddMusicianView, EditMusicianView, addMusician, deleteMusician, editMusician
 
 
 urlpatterns = [
     # path('add/', addMusician,name='addMusician'),
-    path('add/', login_required(AddMusicianView.as_view()),name='addMusician'),
-    path('edit/<id>', editMusician,name='editMusician'),
-    path('delete/<id>', deleteMusician,name='deleteMusician'),
+    path('add/', login_required(AddMusicianView.as_view()), name='addMusician'),
+    # path('edit/<id>', editMusician,name='editMusician'),
+    path('edit/<id>', login_required(EditMusicianView.as_view()), name='editMusician'),
+    path('delete/<id>', deleteMusician, name='deleteMusician'),
 ]

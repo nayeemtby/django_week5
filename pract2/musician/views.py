@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from musician.forms import MusicianForm
@@ -61,6 +61,19 @@ def editMusician(req: HttpRequest, id):
             ctx['form'] = form
             return render(req, 'musician_form.html', ctx)
     return notAllowed
+
+
+class EditMusicianView(SuccessMessageMixin, UpdateView):
+    model = Musician
+    form_class = MusicianForm
+    template_name = 'musician_form.html'
+    pk_url_kwarg = 'id'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'btnTxt': 'Update Musician',
+        'title': 'Edit Musician'
+    }
+    success_message = 'Musician updated successfully'
 
 
 @login_required
