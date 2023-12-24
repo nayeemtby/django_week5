@@ -17,12 +17,12 @@ Including another URLconf
 from django.urls import path
 
 from django.contrib.auth.decorators import login_required
-from uger.views import CLoginView,  logout, profileView, register, updateProfileView
+from uger.views import CLoginView, ProfileView,  logout, profileView, register, updateProfileView
 
 urlpatterns = [
     path('register', register, name='register'),
     path('login', CLoginView.as_view(), name='login'),
     path('logout', logout, name='logout'),
-    path('profile', profileView, name='profile'),
+    path('profile', login_required(ProfileView.as_view()), name='profile'),
     path('updateProfile', updateProfileView, name='updateProfile'),
 ]

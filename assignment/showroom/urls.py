@@ -18,8 +18,10 @@ from django.urls import path
 
 from django.contrib.auth.decorators import login_required
 
-from showroom.views import home
+from showroom.views import HomeView, buyCar, carDetails
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', HomeView.as_view(), name='home'),
+    path('cars/<str:id>', carDetails, name='carDetails'),
+    path('buyCar/<str:id>', login_required(buyCar), name='buyCar'),
 ]

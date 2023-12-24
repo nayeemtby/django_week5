@@ -1,4 +1,6 @@
-from django.http import HttpRequest, HttpResponseNotAllowed
+from typing import Any
+from django.db.models.query import QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
@@ -8,8 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
-from django.views.generic import UpdateView
+from django.views.generic import ListView
 from django.urls import reverse_lazy
+from showroom.models import Transaction
 
 from uger.forms import ProfileUpdateForm, RegistrationForm
 
@@ -65,6 +68,16 @@ def logout(req: HttpRequest):
 def profileView(req: HttpRequest):
     req.user
     return render(req, 'profile.html')
+
+
+class ProfileView(ListView):
+    model = Transaction
+    context_object_name = 'transactions'
+    template_name = 'profile.html'
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.queryset = Transaction.objects.filter(user=request.user)
+        return super().get(request, *args, **kwargs)
 
 
 def updateProfileView(req: HttpRequest):

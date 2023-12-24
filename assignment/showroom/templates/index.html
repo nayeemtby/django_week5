@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container">
     {% if messages %}
     {% for m in messages %}
     <div class="mt-2 alert {% if m.tags == 'error' %}alert-danger {% elif m.tags == 'success' %}alert-success {% endif %}" role="alert">
@@ -9,6 +10,44 @@
       </div>
     {% endfor %}
     {% endif %}
-    <h1> Home </h1>
+    <div class="container d-flex gap-3 align-items-center flex-wrap mb-5 vh-100">
+      <div class="flex-grow-1">
+        <h1>CarMart</h1>
+        <p>Your one stop vehicle solution</p>
+      </div>
+      <img class="w-75" src="{% static 'banner.png' %}" alt="banner" style="border-radius: 30px;">
+      
+    </div>
+    <div class="my-5"></div>
+    <h2 id="cars" class="mt-5 mb-2">Cars</h2>
+    <div class="d-flex flex-wrap gap-3">
+      
+      <a href="{% url 'home' %}#cars" class="badge rounded-pill bg-primary">All</a>
+      
+      {% for brand in brands %}
+      
+      <a href="{% url 'home' %}?brand={{brand.id}}#cars" class="badge rounded-pill bg-primary">{{brand.name}}</a>
+
+
+      {% endfor %}
+
+    </div>
+    <hr>
+    <h4>Available: {{ cars.count }}</h4>
+    <div class="d-flex row flex-wrap mb-5 mt-3 gap-4">
+      {% for car in cars %}
+      <div class="card col-10 col-md-4 col-lg-3" style="width: 18rem;">
+        <img src="{{car.image.url}}" class="card-img-top" alt="car-photo">
+        <div class="card-body">
+          <h5 class="card-title">{{car.brand.name}} {{car.name}}</h5>
+          <p class="card-text">Name: {{ car.name }}</p>
+          <p class="card-text">Price: ${{ car.price }}</p>
+          <p class="card-text">Brand: {{ car.brand.name }}</p>
+          <a href="{% url 'carDetails' car.id %}" class="btn btn-primary">View details</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
 </div>
 {% endblock content %}
